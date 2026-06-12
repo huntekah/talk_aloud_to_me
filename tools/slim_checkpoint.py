@@ -4,9 +4,9 @@
 A GPTTrainer checkpoint (~5.2 GB) carries optimizer/scaler state needed only for
 resuming. Inference needs just the model weights (~1.8 GB). This drops the rest,
 saves a slim file, then loads it and synthesizes a sentence to prove it's valid
-BEFORE you delete the originals. Run under .venv-xtts:
+BEFORE you delete the originals. Run under the xtts_engine env:
 
-  .venv-xtts/bin/python tools/slim_checkpoint.py --ckpt <full.pth> --out <slim.pth>
+  uv run --project xtts_engine python tools/slim_checkpoint.py --ckpt <full.pth> --out <slim.pth>
 """
 import argparse
 import glob

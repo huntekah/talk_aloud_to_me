@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Standalone XTTS-v2 worker process.
 
-Runs under the isolated ``.venv-xtts`` interpreter (transformers < 5, which the
+Runs under the isolated ``xtts_engine`` uv project (transformers < 5, which the
 main app venv cannot have because mlx-audio needs transformers >= 5.5). The
 parent ``XTTSPolishEngine`` spawns this once and keeps it alive so the ~1.8 GB
 model loads a single time.

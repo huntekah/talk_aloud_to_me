@@ -30,7 +30,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 AUDIO_DIR = DATA_DIR / "audio"
 VOICES_DIR = PROJECT_ROOT / "voices"
 WEB_DIR = PROJECT_ROOT / "web"
-XTTS_PYTHON = PROJECT_ROOT / ".venv-xtts" / "bin" / "python"
+XTTS_PYTHON = PROJECT_ROOT / "xtts_engine" / ".venv" / "bin" / "python"
 XTTS_WORKER = PROJECT_ROOT / "server" / "xtts_worker.py"
 
 

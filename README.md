@@ -30,20 +30,21 @@ console and the job displays “warming up model…”.
 > Port: `PORT=9000 ./run.sh`. The server binds to `127.0.0.1` only — no auth,
 > single local user.
 
-## Why two virtual environments?
+## Why two uv projects?
 
 `mlx-audio` (English) requires `transformers >= 5.5`, but `coqui-tts` (XTTS,
 Polish) calls an API that `transformers 5.x` removed. They cannot share a
-process. So:
+process, so each lives in its own locked uv environment:
 
-| Env          | Holds                                   | transformers |
-|--------------|-----------------------------------------|--------------|
-| `.venv`      | FastAPI + Kokoro (English) + the server | 5.x          |
-| `.venv-xtts` | coqui-tts / XTTS-v2 (Polish)            | 4.57.x       |
+| uv project      | venv                | Holds                                   | transformers |
+|-----------------|---------------------|-----------------------------------------|--------------|
+| `.` (this repo) | `.venv`             | FastAPI + Kokoro (English) + the server | 5.x          |
+| `./xtts_engine` | `xtts_engine/.venv` | coqui-tts / XTTS-v2 (Polish)            | 4.57.x       |
 
+`run.sh` runs `uv sync` for both (`uv sync` and `uv sync --project xtts_engine`).
 The server (in `.venv`) talks to a long-lived **XTTS worker subprocess** (in
-`.venv-xtts`) over a small framed pipe protocol (`server/xtts_worker.py`). The
-XTTS env pins `torch < 2.9` to avoid the `torchcodec`/FFmpeg-8 requirement.
+`xtts_engine/.venv`) over a small framed pipe protocol (`server/xtts_worker.py`).
+The XTTS project pins `torch < 2.9` to avoid the `torchcodec`/FFmpeg-8 requirement.
 
 ## Voices
 
@@ -59,7 +60,7 @@ server/
   main.py          FastAPI app, routes, static mount
   jobs.py          queue, single worker, sqlite, caching, restart recovery
   pipeline.py      normalize · detect (lingua) · chunk · concat · ffmpeg encode
-  xtts_worker.py   standalone XTTS process (runs under .venv-xtts)
+  xtts_worker.py   standalone XTTS process (runs in the xtts_engine env)
   engines/
     base.py        TTSEngine interface
     kokoro_en.py   English (Kokoro / mlx-audio)
@@ -68,7 +69,8 @@ server/
 web/               index.html · app.js · style.css
 voices/            user-supplied Polish reference WAVs (+ README)
 data/              jobs.sqlite + audio/*.m4a   (git-ignored)
-requirements-xtts.txt   deps for the isolated Polish env
+tools/             voice-cloning / fine-tune utilities (run via uv)
+xtts_engine/       isolated uv project for XTTS (pyproject.toml + uv.lock)
 ```
 
 ## API

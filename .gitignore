@@ -1,6 +1,5 @@
-# Python (both the app venv and the isolated XTTS venv)
+# Python venvs (this repo's .venv and xtts_engine/.venv; matched at any depth)
 .venv/
-.venv-xtts/
 __pycache__/
 *.pyc
 

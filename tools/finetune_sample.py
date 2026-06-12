@@ -3,13 +3,14 @@
 
 Chunks multi-paragraph text exactly like the app (<=230 chars for XTTS, with
 paragraph-aware silences) and stitches the pieces, so it represents real app
-output rather than a single short utterance. Run under .venv-xtts:
+output rather than a single short utterance. Run under the xtts_engine env:
 
-  PYTHONPATH=. .venv-xtts/bin/python tools/finetune_sample.py --run <run_dir>
+  uv run --project xtts_engine python tools/finetune_sample.py --run <run_dir>
 """
 import argparse
 import glob
 import os
+import sys
 from pathlib import Path
 
 os.environ.setdefault("COQUI_TOS_AGREED", "1")
@@ -22,6 +23,7 @@ import torch
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from server import pipeline as P  # reuse the app's chunking + gap logic
 
 PROJ = Path(__file__).resolve().parent.parent

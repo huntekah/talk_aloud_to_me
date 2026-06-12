@@ -4,9 +4,9 @@
 Inlines coqui's xtts_ft_demo setup but feeds TWO dataset configs (en + pl) so a
 single model learns the speaker across both languages, runs on CPU (the trainer
 has no MPS path), and checkpoints frequently so intermediate models can be
-auditioned. Run under .venv-xtts:
+auditioned. Run under the xtts_engine env:
 
-    .venv-xtts/bin/python tools/finetune_xtts.py --dataset /path/to/voice-dataset
+    uv run --project xtts_engine python tools/finetune_xtts.py --dataset /path/to/voice-dataset
 
 Checkpoints land in data/finetune/my-voice/run/<run>-<timestamp>/.
 """

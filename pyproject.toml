@@ -7,8 +7,8 @@ dependencies = [
     "fastapi>=0.110",
     "uvicorn[standard]>=0.29",
     # English engine (Kokoro). mlx-audio pins transformers>=5.5, which is
-    # incompatible with coqui-tts (XTTS), so XTTS lives in its own venv
-    # (.venv-xtts, see requirements-xtts.txt) driven by a subprocess worker.
+    # incompatible with coqui-tts (XTTS), so XTTS lives in its own uv project
+    # (./xtts_engine) driven by a subprocess worker.
     "mlx-audio>=0.2.0",
     # Kokoro's text->phoneme frontend; the [en] extra adds the English g2p pipeline.
     "misaki[en]>=0.9",

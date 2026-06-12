@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-"""Synthesize EN + PL samples from a fine-tuned XTTS checkpoint. Runs under .venv-xtts.
+"""Synthesize EN + PL samples from a fine-tuned XTTS checkpoint. Runs under the xtts_engine env.
 
 Loads the original XTTS config/vocab/speakers but the *fine-tuned* weights, then
 conditions on the curated reference clips (XTTS is always speaker-conditioned).
 
-  .venv-xtts/bin/python tools/finetune_infer.py --run <run_dir> [--ckpt best_model.pth]
+  uv run --project xtts_engine python tools/finetune_infer.py --run <run_dir> [--ckpt best_model.pth]
 """
 from __future__ import annotations
 

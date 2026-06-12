@@ -4,9 +4,9 @@
 Inlines coqui's xtts_ft_demo training setup (so we can force num_loader_workers=0
 and print_step=1) and times the first few real train_steps, then aborts. Base
 weights are linked from the existing inference cache; only DVAE/mel_stats are
-fetched. Run under .venv-xtts:
+fetched. Run under the xtts_engine env:
 
-    .venv-xtts/bin/python tools/finetune_probe.py [mps|cpu]
+    uv run --project xtts_engine python tools/finetune_probe.py [mps|cpu]
 """
 import os
 import sys

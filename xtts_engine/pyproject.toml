@@ -1,0 +1,21 @@
+[project]
+name = "xtts-engine"
+version = "0.1.0"
+description = "Isolated environment for the Polish XTTS-v2 engine (coqui-tts, transformers <5)."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    # coqui-tts (XTTS-v2) calls transformers APIs removed in 5.x, so this env is
+    # pinned to the 4.x line. The main app keeps transformers 5.x for mlx-audio,
+    # which is why XTTS lives in a separate uv project / venv.
+    # The "cpu" extra installs the plain PyPI torch wheel (MPS-capable on macOS).
+    # torch <2.9 avoids coqui-tts' torchcodec requirement (links against FFmpeg 4-7).
+    "coqui-tts[cpu]>=0.27",
+    "torch>=2.2,<2.9",
+    "torchaudio>=2.2,<2.9",
+    "transformers>=4.57,<5",
+    "numpy<2",
+    "soundfile>=0.12",
+]
+
+[tool.uv]
+package = false

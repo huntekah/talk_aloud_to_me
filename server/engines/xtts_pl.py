@@ -2,8 +2,9 @@
 
 coqui-tts needs transformers < 5 while mlx-audio (the English engine) needs
 transformers >= 5.5, so XTTS cannot live in the app's venv. Instead a long-lived
-worker (``server/xtts_worker.py``) runs under ``.venv-xtts`` and this class is a
-thin client that spawns it, keeps it warm, and exchanges framed messages with it.
+worker (``server/xtts_worker.py``) runs under the ``xtts_engine`` uv project's
+venv and this class is a thin client that spawns it, keeps it warm, and exchanges
+framed messages with it.
 
 Voice selection (listing ``voices/*.wav``, fallback speaker) stays here in the
 parent; the worker only receives a resolved ``(kind, ref)`` pair.
@@ -47,7 +48,7 @@ class XTTSPolishEngine(TTSEngine):
         if not Path(self.xtts_python).exists():
             raise RuntimeError(
                 f"XTTS interpreter not found at {self.xtts_python}. "
-                "Run ./run.sh (it creates .venv-xtts)."
+                "Run ./run.sh (or: uv sync --project xtts_engine)."
             )
         env = os.environ.copy()
         env.setdefault("COQUI_TOS_AGREED", "1")

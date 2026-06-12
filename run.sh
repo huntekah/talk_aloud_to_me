@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Sets up both Python environments (if needed) and starts the TTS Reader.
+# Sets up both uv environments (if needed) and starts the TTS Reader.
 #
-#   .venv       -> FastAPI + Kokoro (English), transformers 5.x
-#   .venv-xtts  -> coqui-tts / XTTS-v2 (Polish), transformers 4.x  (isolated)
+#   .venv              -> FastAPI + Kokoro (English), transformers 5.x  (this project)
+#   xtts_engine/.venv  -> coqui-tts / XTTS-v2 (Polish), transformers 4.x  (uv sub-project)
 #
 # Bound to 127.0.0.1 only. Override the port with PORT=xxxx ./run.sh
 set -euo pipefail
@@ -20,15 +20,14 @@ command -v ffmpeg >/dev/null 2>&1 || {
 }
 
 echo "==> Syncing app environment (.venv): FastAPI + Kokoro English engine…"
-UV_PYTHON=3.11 uv sync
+uv sync
 
-echo "==> Preparing isolated Polish engine (.venv-xtts): coqui-tts / XTTS-v2…"
-[ -x ".venv-xtts/bin/python" ] || uv venv .venv-xtts --python 3.11
-uv pip install --quiet --python .venv-xtts -r requirements-xtts.txt
+echo "==> Syncing isolated Polish engine (xtts_engine/.venv): coqui-tts / XTTS-v2…"
+uv sync --project xtts_engine
 
 echo
 echo "==> TTS Reader → http://127.0.0.1:${PORT}"
 echo "    First Polish run downloads ~1.8 GB (XTTS); first English run ~0.4 GB (Kokoro)."
 echo "    Watch this console for model load / generation progress."
 echo
-exec .venv/bin/python -m uvicorn server.main:app --host 127.0.0.1 --port "${PORT}"
+exec uv run python -m uvicorn server.main:app --host 127.0.0.1 --port "${PORT}"

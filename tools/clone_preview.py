@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""Quick XTTS few-shot clone preview. Runs under .venv-xtts.
+"""Quick XTTS few-shot clone preview. Runs under the xtts_engine env.
 
 Computes XTTS conditioning latents from a folder of reference clips, then
 synthesizes one English + one Polish sample so you can judge the timbre match
 before any app integration.
 
-  .venv-xtts/bin/python tools/clone_preview.py voices/my-voice preview
+  uv run --project xtts_engine python tools/clone_preview.py voices/my-voice preview
 """
 import glob
 import os
