@@ -1,0 +1,15 @@
+{
+  "required_status_checks": {
+    "strict": true,
+    "checks": [
+      { "context": "ruff (lint)" },
+      { "context": "bandit (security)" },
+      { "context": "pytest (pipeline)" }
+    ]
+  },
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 0
+  },
+  "enforce_admins": true,
+  "restrictions": null
+}
