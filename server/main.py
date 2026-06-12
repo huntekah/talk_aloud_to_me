@@ -1,7 +1,9 @@
 """FastAPI app: REST API + static frontend for the local TTS reader.
 
-Binds to 127.0.0.1 only (see run.sh). No auth — single local user, same origin,
-so no CORS needed. The frontend in ``web/`` is served at ``/``.
+Host/port are chosen at launch (see run.sh; default 0.0.0.0:8765). There's no
+auth and the frontend is same-origin (so no CORS needed) — if you bind beyond
+localhost, only do so on a network you trust. The frontend in ``web/`` is served
+at ``/``.
 """
 from __future__ import annotations
 

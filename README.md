@@ -20,15 +20,24 @@ minute or two is fine — quality over latency.
 ## Run
 
 ```bash
-./run.sh           # or: make run
+./run.sh
 ```
 
-Then open **http://127.0.0.1:8765**. The first Polish generation downloads
-~1.8 GB (XTTS) and the first English one ~0.4 GB (Kokoro); progress shows in the
-console and the job displays “warming up model…”.
+That's the whole setup — `./run.sh` provisions both uv environments on first run,
+starts the server, and opens your browser at **http://localhost:8765**. (Prereqs:
+`uv` and `ffmpeg` → `brew install uv ffmpeg`.) The first Polish generation
+downloads ~1.8 GB (XTTS) and the first English one ~0.4 GB (Kokoro); progress
+shows in the console as “warming up model…”.
 
-> Port: `PORT=9000 ./run.sh`. The server binds to `127.0.0.1` only — no auth,
-> single local user.
+```bash
+PORT=9000 ./run.sh         # different port
+HOST=127.0.0.1 ./run.sh    # restrict to this machine only
+NO_OPEN=1 ./run.sh         # don't auto-open the browser
+```
+
+> By default the server binds `0.0.0.0`, so it's reachable from other devices on
+> your network (e.g. your phone) at `http://<your-mac-ip>:8765`. There's **no
+> auth** — keep it to trusted networks, or set `HOST=127.0.0.1` for local-only.
 
 ## Why two uv projects?
 
