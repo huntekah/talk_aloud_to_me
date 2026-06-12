@@ -1,0 +1,24 @@
+[project]
+name = "tts-reader"
+version = "0.1.0"
+description = "Local text-to-speech reader (Polish via XTTS-v2, English via Kokoro) with podcast-style playback."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    # English engine (Kokoro). mlx-audio pins transformers>=5.5, which is
+    # incompatible with coqui-tts (XTTS), so XTTS lives in its own venv
+    # (.venv-xtts, see requirements-xtts.txt) driven by a subprocess worker.
+    "mlx-audio>=0.2.0",
+    # Kokoro's text->phoneme frontend; the [en] extra adds the English g2p pipeline.
+    "misaki[en]>=0.9",
+    # spaCy English model misaki needs. Declared explicitly so `uv sync` keeps it
+    # (otherwise it gets pruned and re-downloaded on every sync). Matches spaCy 3.8.
+    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
+    "lingua-language-detector>=2.0",
+    "numpy<2",
+    "soundfile>=0.12",
+]
+
+[tool.uv]
+package = false

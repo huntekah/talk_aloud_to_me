@@ -1,0 +1,21 @@
+# Python (both the app venv and the isolated XTTS venv)
+.venv/
+.venv-xtts/
+__pycache__/
+*.pyc
+
+# Runtime + private data: jobs db, generated audio, training dataset CSVs
+# (meeting transcripts), and the fine-tuned voice model (my-voice.pth).
+data/
+
+# Voice content is PRIVATE: your reference clips, clone subdirs, and any
+# manifest holding transcripts. Ignore everything under voices/ except the
+# README so the folder + instructions stay in the repo.
+voices/*
+!voices/README.md
+
+# Synthesized voice previews (your cloned/fine-tuned voice).
+preview/
+
+# OS
+.DS_Store

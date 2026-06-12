@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>TTS Reader</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎧 TTS Reader</h1>
+    <div class="sub">Paste text, pick a language, listen. Polish (XTTS-v2) &amp; English (Kokoro), local.</div>
+  </header>
+
+  <main>
+    <!-- Input -->
+    <section class="card" id="input-card">
+      <textarea id="text" placeholder="Paste an article here…"></textarea>
+      <div class="row between">
+        <span class="muted" id="charcount">0 characters</span>
+        <div class="controls">
+          <label class="field">Language
+            <select id="lang">
+              <option value="auto">Auto</option>
+              <option value="pl">Polski</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label class="field" id="voice-wrap">Voice
+            <select id="voice"></select>
+          </label>
+          <button class="primary" id="generate">Generate</button>
+        </div>
+      </div>
+
+      <div id="progress" class="hidden">
+        <div class="bar"><div id="bar-fill"></div></div>
+        <div id="progress-label">Generating…</div>
+      </div>
+      <div id="error" class="hidden error"></div>
+    </section>
+
+    <!-- Player -->
+    <section class="card hidden" id="player-card">
+      <div id="player-title"></div>
+      <audio id="audio" preload="metadata"></audio>
+      <div class="player-controls">
+        <button id="back15" title="Back 15s (←)">−15s</button>
+        <button id="playpause" class="primary" title="Play / Pause (space)">▶</button>
+        <button id="fwd15" title="Forward 15s (→)">+15s</button>
+        <button id="speed" title="Playback speed">1.0×</button>
+        <label class="sleep">Sleep
+          <select id="sleep">
+            <option value="0">Off</option>
+            <option value="5">5 min</option>
+            <option value="10">10 min</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+          </select>
+          <span id="sleep-remain"></span>
+        </label>
+      </div>
+      <div class="seek-row">
+        <span id="cur">0:00</span>
+        <input type="range" id="seek" min="0" max="1000" value="0" step="1" />
+        <span id="dur">0:00</span>
+      </div>
+    </section>
+
+    <!-- Library -->
+    <section class="card" id="library-card">
+      <h2>Library</h2>
+      <ul id="library"><li class="empty">No recordings yet.</li></ul>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
