@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: ruff (lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uvx ruff@0.15.17 check
+
+  bandit:
+    name: bandit (security)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uvx bandit@1.9.4 -c pyproject.toml -r server tools
+
+  pytest:
+    name: pytest (pipeline)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install ffmpeg (for the encode test)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      # Only the lightweight `test` group (no mlx/torch — those are macOS-only
+      # and unneeded for the platform-independent pipeline tests).
+      - name: Install test deps
+        run: uv sync --only-group test
+      - name: Run tests
+        run: uv run --no-sync pytest -q

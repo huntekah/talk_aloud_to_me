@@ -74,7 +74,6 @@ def main():
         train_items = items[EVAL_PER_LANG:]
         write(out / f"train_{lang}.csv", train_items)
         write(out / f"eval_{lang}.csv", eval_items)
-        mins = sum(0 for _ in items)  # placeholder; durations not retained
         summary.append((lang, len(train_items), len(eval_items)))
 
     print(f"dataset root: {ds}")

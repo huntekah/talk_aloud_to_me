@@ -24,7 +24,6 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 from huggingface_hub import hf_hub_download
 from trainer import Trainer, TrainerArgs
-
 from TTS.config.shared_configs import BaseDatasetConfig
 from TTS.tts.datasets import load_tts_samples
 from TTS.tts.layers.xtts.trainer.gpt_trainer import GPTArgs, GPTTrainer, GPTTrainerConfig
@@ -58,8 +57,8 @@ def main():
 
     xtts_ckpt = str(CACHE / "model.pth")
     tokenizer = str(CACHE / "vocab.json")
-    dvae = hf_hub_download("coqui/XTTS-v2", "dvae.pth")
-    mel = hf_hub_download("coqui/XTTS-v2", "mel_stats.pth")
+    dvae = hf_hub_download("coqui/XTTS-v2", "dvae.pth", revision="6c2b0d75eae4b7047358e3b6bd9325f857d43f77")
+    mel = hf_hub_download("coqui/XTTS-v2", "mel_stats.pth", revision="6c2b0d75eae4b7047358e3b6bd9325f857d43f77")
 
     model_args = GPTArgs(
         max_conditioning_length=132300, min_conditioning_length=66150,

@@ -25,7 +25,6 @@ import json
 import torch
 from huggingface_hub import hf_hub_download
 from trainer import Trainer, TrainerArgs
-
 from TTS.config.shared_configs import BaseDatasetConfig
 from TTS.tts.datasets import load_tts_samples
 from TTS.tts.layers.xtts.trainer.gpt_trainer import GPTArgs, GPTTrainer, GPTTrainerConfig
@@ -41,8 +40,8 @@ CACHE = Path.home() / "Library/Application Support/tts/tts_models--multilingual-
 XTTS_CKPT = str(CACHE / "model.pth")
 TOKENIZER = str(CACHE / "vocab.json")
 print("fetching dvae.pth / mel_stats.pth (small)…", flush=True)
-DVAE = hf_hub_download("coqui/XTTS-v2", "dvae.pth")
-MEL = hf_hub_download("coqui/XTTS-v2", "mel_stats.pth")
+DVAE = hf_hub_download("coqui/XTTS-v2", "dvae.pth", revision="6c2b0d75eae4b7047358e3b6bd9325f857d43f77")
+MEL = hf_hub_download("coqui/XTTS-v2", "mel_stats.pth", revision="6c2b0d75eae4b7047358e3b6bd9325f857d43f77")
 
 # ---- tiny dataset from the curated English clips ----------------------------
 man = json.loads((VOICE / "manifest.json").read_text())
@@ -95,12 +94,23 @@ if WANT_DEVICE == "mps" and torch.backends.mps.is_available():
 # ---- time the first few train_steps, then abort -----------------------------
 times = []
 _orig = GPTTrainer.train_step
-class _Stop(Exception): ...
+
+
+class _Stop(Exception):
+    pass
+
+
 def timed(self, *a, **k):
-    t0 = time.time(); out = _orig(self, *a, **k); dt = time.time() - t0
-    times.append(dt); print(f"[probe] step {len(times)}: {dt:.2f}s  (device={next(self.parameters()).device})", flush=True)
-    if len(times) >= N_TIME: raise _Stop()
+    t0 = time.time()
+    out = _orig(self, *a, **k)
+    dt = time.time() - t0
+    times.append(dt)
+    print(f"[probe] step {len(times)}: {dt:.2f}s  (device={next(self.parameters()).device})", flush=True)
+    if len(times) >= N_TIME:
+        raise _Stop()
     return out
+
+
 GPTTrainer.train_step = timed
 
 trainer = Trainer(

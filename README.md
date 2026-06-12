@@ -1,5 +1,7 @@
 # 🎧 TTS Reader
 
+[![CI](https://github.com/huntekah/talk_aloud_to_me/actions/workflows/ci.yml/badge.svg)](https://github.com/huntekah/talk_aloud_to_me/actions/workflows/ci.yml)
+
 A local, single-user web app for turning pasted text into speech and listening
 with podcast-style controls. Polish and English, a different model per language.
 Runs natively on Apple Silicon (uses the GPU via MPS). Generation taking a
@@ -99,6 +101,20 @@ xtts_engine/       isolated uv project for XTTS (pyproject.toml + uv.lock)
 Play/pause (space), −15 s / +15 s (← / →), draggable seek bar, speed cycle
 (1.0–2.5× and 0.75×, pitch preserved), sleep timer (5/10/15/30 min), and
 per-job resume (last position saved in `localStorage`).
+
+## Development
+
+```bash
+make lint    # ruff --fix + ruff format (auto-fix)
+make check   # ruff check + bandit security scan (read-only gate)
+make test    # pytest (platform-independent pipeline tests)
+```
+
+CI runs the same checks on every push / PR to `main`
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): ruff, bandit, and
+pytest. The test job installs only the lightweight `test` dependency group
+(`uv sync --only-group test`) — no mlx/torch — so it runs on Linux runners even
+though the app itself is macOS/Apple-Silicon only.
 
 ## Housekeeping
 

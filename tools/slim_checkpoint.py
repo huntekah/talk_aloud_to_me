@@ -18,7 +18,6 @@ os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
 
 import numpy as np
 import torch
-
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 
@@ -33,7 +32,9 @@ def main():
     ap.add_argument("--ref-dir", default=str(PROJ / "voices" / "my-voice"))
     args = ap.parse_args()
 
-    full = torch.load(args.ckpt, map_location="cpu", weights_only=False)
+    # weights_only=False is required (trainer checkpoint holds config objects);
+    # the checkpoint is one we produced locally, not untrusted input.
+    full = torch.load(args.ckpt, map_location="cpu", weights_only=False)  # nosec B614
     keep = {"model": full["model"]} if "model" in full else {"model": full}
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     torch.save(keep, args.out)

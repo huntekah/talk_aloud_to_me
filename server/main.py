@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
@@ -39,11 +39,11 @@ XTTS_WORKER = PROJECT_ROOT / "server" / "xtts_worker.py"
 class JobCreate(BaseModel):
     text: str = Field(min_length=1)
     lang: Literal["auto", "pl", "en"] = "auto"
-    voice: Optional[str] = None
+    voice: str | None = None
 
 
 class UnloadRequest(BaseModel):
-    name: Optional[str] = None  # "xtts" | "kokoro" | "pl" | "en" | None = all
+    name: str | None = None  # "xtts" | "kokoro" | "pl" | "en" | None = all
 
 
 @asynccontextmanager

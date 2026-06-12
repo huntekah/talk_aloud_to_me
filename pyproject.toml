@@ -22,3 +22,53 @@ dependencies = [
 
 [tool.uv]
 package = false
+
+[dependency-groups]
+# Installed into .venv by `uv sync` for `make lint` / `make check` / `make test`.
+dev = [
+    "ruff>=0.14",
+    "bandit>=1.8",
+    "pytest>=8",
+]
+# Lightweight deps for the platform-independent pipeline tests (no mlx/torch, so
+# they install + run on Linux CI). Use: `uv sync --only-group test`.
+test = [
+    "pytest>=8",
+    "numpy<2",
+    "lingua-language-detector>=2.0",
+]
+
+# =============================================================================
+# Ruff — lint + format (line length, import sort, pyflakes, pyupgrade)
+# =============================================================================
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP"]
+ignore = ["E501"]  # line length is enforced by the formatter, not the linter
+
+[tool.ruff.lint.per-file-ignores]
+# These scripts deliberately set env vars / dup file descriptors before their
+# heavy imports, so not every import sits at the top of the module (E402).
+"tools/*" = ["E402"]
+"server/xtts_worker.py" = ["E402"]
+
+# =============================================================================
+# Bandit — security linter
+# =============================================================================
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "xtts_engine"]
+# Low-severity, intentional patterns in this app:
+#   B101 assert_used; B404/B603/B607 subprocess (ffmpeg + the XTTS worker, never
+#   shell=True, all args code-controlled); B110 try/except/pass (best-effort GPU
+#   cache release). Medium+ findings stay enabled and are reviewed via # nosec.
+skips = ["B101", "B404", "B603", "B607", "B110"]
+
+# =============================================================================
+# Pytest
+# =============================================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

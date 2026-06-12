@@ -214,8 +214,10 @@ class JobManager:
                 self._queue.task_done()
 
     def _set(self, job_id: str, **fields) -> None:
+        # Column names are internal constants (status/progress/…), never user
+        # input; all values are bound parameters. Safe despite the f-string.
         cols = ", ".join(f"{k}=?" for k in fields)
-        self._exec(f"UPDATE jobs SET {cols} WHERE id=?", (*fields.values(), job_id))
+        self._exec(f"UPDATE jobs SET {cols} WHERE id=?", (*fields.values(), job_id))  # nosec
 
     async def _process(self, job_id: str) -> None:
         row = self._row(job_id)
